@@ -22,7 +22,7 @@ class Settlement :
 class LongGetter:
     @staticmethod
     def makeLong( i0,  i1,  i2,  i3,  i4,  i5,  i6,  i7):
-        return ((LongGetter.toUnsignedLong(i0) << LongGetter.pickPos(56, 0))
+        rawvalue = ((LongGetter.toUnsignedLong(i0) << LongGetter.pickPos(56, 0))
                 | (LongGetter.toUnsignedLong(i1) << LongGetter.pickPos(56, 8))
                 | (LongGetter.toUnsignedLong(i2) << LongGetter.pickPos(56, 16))
                 | (LongGetter.toUnsignedLong(i3) << LongGetter.pickPos(56, 24))
@@ -30,6 +30,15 @@ class LongGetter:
                 | (LongGetter.toUnsignedLong(i5) << LongGetter.pickPos(56, 40))
                 | (LongGetter.toUnsignedLong(i6) << LongGetter.pickPos(56, 48))
                 | (LongGetter.toUnsignedLong(i7) << LongGetter.pickPos(56, 56)))
+        return LongGetter.to_int64(rawvalue)
+
+    @staticmethod
+    def to_int64(n):
+        n = n & ((1 << 64) - 1)
+        if n > (1 << 63) - 1:
+            n -= 1 << 64
+        return n
+
     @staticmethod
     def toUnsignedLong(n):
         return n & 0xff
