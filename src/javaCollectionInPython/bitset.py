@@ -96,13 +96,7 @@ class BitSet :
                 break
             i -= 1
         self.wordsInUse = i + 1
-    # *
-    #     * Creates a new bit set. All bits are initially {@code false}.
-    def __init__(self) :
-        self.initWords(BitSet.BITS_PER_WORD)
-        self.sizeIsSticky = False
-    def initWords(self, nbits) :
-        self.words = np.zeros(BitSet.wordIndex(nbits-1) + 1, dtype=np.int64)
+
     # *
     #     * Creates a bit set using words as the internal representation.
     #     * The last word (if there is one) must be non-zero.
@@ -282,10 +276,14 @@ class BitSet :
             self.ensureCapacity(set.wordsInUse)
             self.wordsInUse = set.wordsInUse
         # Perform logical OR on words in common
-        i = 0
-        while (i < wordsInCommon) :
-            self.words[i] |= set.words[i]
-            i += 1
+        # i = 0
+        # while (i < wordsInCommon) :
+        #     self.words[i] |= set.words[i]
+        #     i += 1
+
+        # use numpy to speed up perf
+        self.words[0:wordsInCommon] = np.bitwise_or(self.words[0:wordsInCommon], set.words[0:wordsInCommon])
+
         # Copy any remaining words
         if (wordsInCommon < set.wordsInUse) :
             #Object src,  int  srcPos,
@@ -313,10 +311,13 @@ class BitSet :
             self.ensureCapacity(set.wordsInUse)
             self.wordsInUse = set.wordsInUse
         # Perform logical XOR on words in common
-        i = 0
-        while (i < wordsInCommon) :
-            self.words[i] ^= set.words[i]
-            i += 1
+        # i = 0
+        # while (i < wordsInCommon) :
+        #     self.words[i] ^= set.words[i]
+        #     i += 1
+        # use numpy to speed up perf
+        self.words[0:wordsInCommon] = np.bitwise_xor(self.words[0:wordsInCommon], set.words[0:wordsInCommon])
+
         # Copy any remaining words
         if (wordsInCommon < set.wordsInUse) :
             self.words[wordsInCommon:self.wordsInUse] = set.words[wordsInCommon:wordsInCommon + self.wordsInUse - wordsInCommon]
