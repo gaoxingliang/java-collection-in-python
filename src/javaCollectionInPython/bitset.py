@@ -184,7 +184,7 @@ class BitSet :
             raise Exception("bitIndex < 0: " + str(bitIndex))
         wordIndex = BitSet.wordIndex(bitIndex)
         self.expandTo(wordIndex)
-        self.words[wordIndex] |= (1 << (bitIndex%64))
+        self.words[wordIndex] |= (np.int64(1) << (bitIndex%64))
         # Restores invariants
         self.checkInvariants()
     # *
@@ -211,7 +211,7 @@ class BitSet :
         wordIndex = BitSet.wordIndex(bitIndex)
         if (wordIndex >= self.wordsInUse) :
             return
-        self.words[wordIndex] &= ~(1 << (bitIndex%64))
+        self.words[wordIndex] &= ~(np.int64(1) << (bitIndex%64))
         self.recalculateWordsInUse()
         self.checkInvariants()
     # *
@@ -228,7 +228,7 @@ class BitSet :
             raise Exception("bitIndex < 0: " + str(bitIndex))
         self.checkInvariants()
         wordIndex = BitSet.wordIndex(bitIndex)
-        return (wordIndex < self.wordsInUse) and ((self.words[wordIndex] & (1 << (bitIndex%64))) != 0)
+        return (wordIndex < self.wordsInUse) and ((self.words[wordIndex] & (np.int64(1)  << (bitIndex%64))) != 0)
     # *
     #     * Returns the number of bits set to {@code true} in this {@code BitSet}.
     #     *
